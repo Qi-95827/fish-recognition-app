@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 粘土风格应用主题 -->
+    <style name="Theme.FishRecognition" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- 主颜色 -->
+        <item name="colorPrimary">@color/clay_primary</item>
+        <item name="colorPrimaryDark">@color/clay_primary_light</item>
+        <item name="colorAccent">@color/clay_secondary</item>
+
+        <!-- 背景颜色 -->
+        <item name="android:colorBackground">@color/clay_background</item>
+        <item name="android:windowBackground">@color/clay_background</item>
+
+        <!-- 状态栏 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- 文本颜色 -->
+        <item name="android:textColorPrimary">@color/clay_text</item>
+        <item name="android:textColorSecondary">@color/clay_text_light</item>
+
+        <!-- 按钮样式 -->
+        <item name="buttonStyle">@style/ClayButton</item>
+
+        <!-- 浮动操作按钮样式 -->
+        <item name="floatingActionButtonStyle">@style/ClayFloatingActionButton</item>
+
+        <!-- 进度条样式 -->
+        <item name="android:progressBarStyle">@style/ClayProgressBar</item>
+    </style>
+
+    <!-- 粘土风格按钮 -->
+    <style name="ClayButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/clay_primary</item>
+        <item name="cornerRadius">@dimen/clay_radius_large</item>
+        <item name="textColor">@color/clay_text</item>
+        <item name="android:textSize">@dimen/clay_text_size_medium</item>
+        <item name="android:elevation">@dimen/clay_elevation_medium</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- 粘土风格浮动操作按钮 -->
+    <style name="ClayFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="tint">@color/clay_text</item>
+        <item name="fabCustomSize">64dp</item>
+    </style>
+
+    <!-- 粘土风格进度条 -->
+    <style name="ClayProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/clay_primary</item>
+    </style>
+
+    <!-- 粘土风格文本样式 -->
+    <style name="ClayTextTitle">
+        <item name="android:textSize">@dimen/clay_text_size_xlarge</item>
+        <item name="android:textColor">@color/clay_text</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ClayTextBody">
+        <item name="android:textSize">@dimen/clay_text_size_medium</item>
+        <item name="android:textColor">@color/clay_text</item>
+    </style>
+
+    <style name="ClayTextCaption">
+        <item name="android:textSize">@dimen/clay_text_size_small</item>
+        <item name="android:textColor">@color/clay_text_light</item>
+    </style>
+
+    <!-- 粘土风格卡片 -->
+    <style name="ClayCard">
+        <item name="cardBackgroundColor">@color/clay_surface</item>
+        <item name="cardCornerRadius">@dimen/clay_radius_medium</item>
+        <item name="cardElevation">@dimen/clay_elevation_medium</item>
+    </style>
+
+</resources>

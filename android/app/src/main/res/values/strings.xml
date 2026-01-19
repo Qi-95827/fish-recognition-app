@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 应用名称 -->
+    <string name="app_name">鱼类识别</string>
+
+    <!-- 权限相关 -->
+    <string name="camera_permission_title">相机权限</string>
+    <string name="camera_permission_message">需要相机权限来拍摄鱼类照片进行识别</string>
+    <string name="camera_permission_denied">相机权限已被拒绝，无法使用相机功能</string>
+    <string name="btn_allow">允许</string>
+    <string name="btn_deny">拒绝</string>
+    <string name="btn_settings">前往设置</string>
+
+    <!-- 主界面 -->
+    <string name="recognize_fish">识别鱼类</string>
+    <string name="loading">识别中…</string>
+    <string name="fish_name">鱼种名称</string>
+    <string name="confidence">置信度</string>
+    <string name="no_fish_detected">未检测到鱼类</string>
+    <string name="try_again">再试一次</string>
+    <string name="result_title">识别结果</string>
+    <string name="gallery">相册</string>
+    <string name="camera">相机</string>
+
+    <!-- 错误提示 -->
+    <string name="error_camera_failed">相机启动失败</string>
+    <string name="error_capture_failed">拍照失败</string>
+    <string name="error_image_load_failed">图片加载失败</string>
+    <string name="error_recognition_failed">识别失败</string>
+    <string name="error_model_load_failed">模型加载失败</string>
+</resources>

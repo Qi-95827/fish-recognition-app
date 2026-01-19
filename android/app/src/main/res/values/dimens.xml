@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 粘土风格尺寸 -->
+    <dimen name="clay_radius_small">12dp</dimen>
+    <dimen name="clay_radius_medium">20dp</dimen>
+    <dimen name="clay_radius_large">28dp</dimen>
+    <dimen name="clay_radius_xlarge">36dp</dimen>
+
+    <dimen name="clay_padding_small">12dp</dimen>
+    <dimen name="clay_padding_medium">20dp</dimen>
+    <dimen name="clay_padding_large">28dp</dimen>
+
+    <dimen name="clay_elevation_small">4dp</dimen>
+    <dimen name="clay_elevation_medium">8dp</dimen>
+    <dimen name="clay_elevation_large">12dp</dimen>
+
+    <dimen name="clay_text_size_small">14sp</dimen>
+    <dimen name="clay_text_size_medium">16sp</dimen>
+    <dimen name="clay_text_size_large">20sp</dimen>
+    <dimen name="clay_text_size_xlarge">28sp</dimen>
+</resources>

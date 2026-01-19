@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 粘土风格配色方案 -->
+    <color name="clay_primary">#FF9A8B</color>
+    <color name="clay_primary_light">#FFC4B8</color>
+    <color name="clay_secondary">#A0E7E5</color>
+    <color name="clay_secondary_light">#C5F5F4</color>
+    <color name="clay_accent">#FFB4A2</color>
+    <color name="clay_background">#FDF6F3</color>
+    <color name="clay_surface">#FFF9F5</color>
+    <color name="clay_text">#4A4A4A</color>
+    <color name="clay_text_light">#7A7A7A</color>
+    <color name="clay_shadow">#E8DDD7</color>
+    <color name="clay_success">#A8E6CF</color>
+    <color name="clay_warning">#FFD93D</color>
+    <color name="clay_error">#FFB8B8</color>
+</resources>

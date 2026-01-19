@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/clay_background">
+
+    <!-- 相机预览视图 -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/clay_surface"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 顶部标题卡片 -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/recognize_fish"
+        android:textSize="@dimen/clay_text_size_xlarge"
+        android:textColor="@color/clay_text"
+        android:paddingHorizontal="@dimen/clay_padding_large"
+        android:paddingVertical="@dimen/clay_padding_medium"
+        android:background="@drawable/clay_card"
+        android:elevation="@dimen/clay_elevation_medium"
+        android:layout_marginTop="@dimen/clay_padding_large"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 加载进度条 -->
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/clay_primary"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 识别结果卡片 -->
+    <LinearLayout
+        android:id="@+id/resultCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/clay_padding_large"
+        android:layout_marginHorizontal="@dimen/clay_padding_large"
+        android:layout_marginBottom="140dp"
+        android:background="@drawable/clay_card"
+        android:elevation="@dimen/clay_elevation_large"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/resultTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/result_title"
+            android:textSize="@dimen/clay_text_size_large"
+            android:textColor="@color/clay_text"
+            android:layout_marginBottom="@dimen/clay_padding_medium" />
+
+        <TextView
+            android:id="@+id/fishNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fish_name"
+            android:textSize="@dimen/clay_text_size_xlarge"
+            android:textColor="@color/clay_text"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/fishNameEngText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fish Name"
+            android:textSize="@dimen/clay_text_size_medium"
+            android:textColor="@color/clay_text_light"
+            android:layout_marginBottom="@dimen/clay_padding_small" />
+
+        <TextView
+            android:id="@+id/confidenceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confidence"
+            android:textSize="@dimen/clay_text_size_medium"
+            android:textColor="@color/clay_text"
+            android:layout_marginBottom="@dimen/clay_padding_medium" />
+
+        <Button
+            android:id="@+id/tryAgainButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/try_again"
+            android:textSize="@dimen/clay_text_size_medium"
+            android:background="@drawable/clay_button_primary"
+            android:textColor="@color/clay_text"
+            android:minHeight="56dp" />
+    </LinearLayout>
+
+    <!-- 底部操作栏 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/clay_padding_large"
+        android:paddingBottom="@dimen/clay_padding_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 相册按钮 -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/galleryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:src="@android:drawable/ic_menu_gallery"
+            app:backgroundTint="@color/clay_accent"
+            app:tint="@color/clay_text"
+            app:elevation="@dimen/clay_elevation_medium"
+            app:fabSize="normal" />
+
+        <!-- 拍照按钮 -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/captureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_camera"
+            app:backgroundTint="@color/clay_secondary"
+            app:tint="@color/clay_text"
+            app:elevation="@dimen/clay_elevation_large"
+            app:fabSize="large"
+            app:maxImageSize="36dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
