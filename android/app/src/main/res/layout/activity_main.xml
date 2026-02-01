@@ -1,149 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/clay_background">
+    android:fitsSystemWindows="true">
 
     <!-- 相机预览视图 -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/clay_surface"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
 
-    <!-- 顶部标题卡片 -->
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
+    <!-- 顶部工具栏 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/recognize_fish"
-        android:textSize="@dimen/clay_text_size_xlarge"
-        android:textColor="@color/clay_text"
-        android:paddingHorizontal="@dimen/clay_padding_large"
-        android:paddingVertical="@dimen/clay_padding_medium"
-        android:background="@drawable/clay_card"
-        android:elevation="@dimen/clay_elevation_medium"
-        android:layout_marginTop="@dimen/clay_padding_large"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:background="@android:color/transparent"
+        app:elevation="0dp"
+        app:liftOnScroll="false">
 
-    <!-- 加载进度条 -->
-    <ProgressBar
-        android:id="@+id/loadingProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminateTint="@color/clay_primary"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/md_surface"
+            app:title="@string/recognize_fish"
+            app:titleTextColor="@color/md_on_surface"
+            app:navigationIcon="@drawable/ic_fish_md3"
+            app:navigationIconTint="@color/md_primary"
+            app:menu="@menu/main_menu" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- 加载进度指示器 - 全屏遮罩 -->
+    <FrameLayout
+        android:id="@+id/loadingContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:clickable="true"
+        android:focusable="true">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/MD3Card.Elevated"
+            app:cardCornerRadius="@dimen/md_corner_extra_large">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="@dimen/md_spacing_extra_large">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:indicatorSize="48dp"
+                    app:indicatorColor="@color/md_primary"
+                    app:trackThickness="4dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/md_spacing_medium"
+                    android:text="@string/loading"
+                    style="@style/MD3Text.BodyLarge" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
     <!-- 识别结果卡片 -->
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/resultCard"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/clay_padding_large"
-        android:layout_marginHorizontal="@dimen/clay_padding_large"
-        android:layout_marginBottom="140dp"
-        android:background="@drawable/clay_card"
-        android:elevation="@dimen/clay_elevation_large"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/md_spacing_medium"
+        android:layout_marginEnd="@dimen/md_spacing_medium"
+        android:layout_marginBottom="100dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        style="@style/MD3Card.Elevated"
+        app:cardCornerRadius="@dimen/md_corner_extra_large">
 
-        <TextView
-            android:id="@+id/resultTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/result_title"
-            android:textSize="@dimen/clay_text_size_large"
-            android:textColor="@color/clay_text"
-            android:layout_marginBottom="@dimen/clay_padding_medium" />
-
-        <TextView
-            android:id="@+id/fishNameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/fish_name"
-            android:textSize="@dimen/clay_text_size_xlarge"
-            android:textColor="@color/clay_text"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp" />
-
-        <TextView
-            android:id="@+id/fishNameEngText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fish Name"
-            android:textSize="@dimen/clay_text_size_medium"
-            android:textColor="@color/clay_text_light"
-            android:layout_marginBottom="@dimen/clay_padding_small" />
-
-        <TextView
-            android:id="@+id/confidenceText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/confidence"
-            android:textSize="@dimen/clay_text_size_medium"
-            android:textColor="@color/clay_text"
-            android:layout_marginBottom="@dimen/clay_padding_medium" />
-
-        <Button
-            android:id="@+id/tryAgainButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/try_again"
-            android:textSize="@dimen/clay_text_size_medium"
-            android:background="@drawable/clay_button_primary"
-            android:textColor="@color/clay_text"
-            android:minHeight="56dp" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:padding="@dimen/md_spacing_large">
+
+            <!-- 结果头部 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/md_spacing_medium">
+
+                <!-- 鱼类图标 -->
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/fishIcon"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:text="🐟"
+                    android:textSize="40sp"
+                    android:gravity="center"
+                    android:background="@drawable/md3_icon_container"
+                    android:layout_marginEnd="@dimen/md_spacing_medium" />
+
+                <!-- 名称区域 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <!-- 鱼类中文名称 -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/fishNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fish_name"
+                        style="@style/MD3Text.HeadlineMedium" />
+
+                    <!-- 鱼类英文名称 -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/fishNameEngText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fish Name"
+                        android:textColor="@color/md_on_surface_variant"
+                        style="@style/MD3Text.BodyMedium" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 置信度区块 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/md_spacing_medium"
+                app:cardBackgroundColor="@color/md_surface_container"
+                app:cardCornerRadius="@dimen/md_corner_medium"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/md_spacing_medium">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="@dimen/md_spacing_small">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/confidence"
+                            style="@style/MD3Text.LabelLarge" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/confidencePercentText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0%"
+                            android:textColor="@color/md_primary"
+                            style="@style/MD3Text.TitleMedium" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/confidenceProgress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progress="0"
+                        android:max="100"
+                        app:indicatorColor="@color/md_primary"
+                        app:trackColor="@color/md_outline_variant"
+                        app:trackThickness="8dp"
+                        app:trackCornerRadius="4dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 操作按钮 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tryAgainButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/md_button_height_large"
+                android:text="@string/try_again"
+                style="@style/MD3Button"
+                app:icon="@drawable/ic_refresh_md3"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/md_spacing_small" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- 底部操作栏 -->
-    <LinearLayout
-        android:layout_width="0dp"
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/clay_padding_large"
-        android:paddingBottom="@dimen/clay_padding_large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/md_surface"
+        app:fabCradleMargin="8dp"
+        app:fabCradleRoundedCornerRadius="16dp"
+        app:fabCradleVerticalOffset="4dp"
+        app:hideOnScroll="false"
+        style="@style/Widget.Material3.BottomAppBar">
 
         <!-- 相册按钮 -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/galleryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:src="@android:drawable/ic_menu_gallery"
-            app:backgroundTint="@color/clay_accent"
-            app:tint="@color/clay_text"
-            app:elevation="@dimen/clay_elevation_medium"
-            app:fabSize="normal" />
+            android:layout_gravity="start"
+            android:layout_marginStart="@dimen/md_spacing_medium"
+            style="@style/Widget.Material3.Button.IconButton"
+            app:icon="@drawable/ic_photo_library_md3"
+            app:iconTint="@color/md_on_surface_variant"
+            app:iconSize="@dimen/md_icon_size"
+            android:contentDescription="@string/gallery" />
+    </com.google.android.material.bottomappbar.BottomAppBar>
 
-        <!-- 拍照按钮 -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/captureButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_camera"
-            app:backgroundTint="@color/clay_secondary"
-            app:tint="@color/clay_text"
-            app:elevation="@dimen/clay_elevation_large"
-            app:fabSize="large"
-            app:maxImageSize="36dp" />
-    </LinearLayout>
+    <!-- 主拍照按钮 FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/captureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_camera_md3"
+        android:contentDescription="@string/camera"
+        app:layout_anchor="@id/bottomAppBar"
+        app:backgroundTint="@color/md_primary"
+        app:tint="@color/md_on_primary"
+        app:fabCustomSize="72dp"
+        app:maxImageSize="32dp"
+        style="@style/MD3FloatingActionButton" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

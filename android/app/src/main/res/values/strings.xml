@@ -17,7 +17,7 @@
     <string name="fish_name">鱼种名称</string>
     <string name="confidence">置信度</string>
     <string name="no_fish_detected">未检测到鱼类</string>
-    <string name="try_again">再试一次</string>
+    <string name="try_again">再次识别</string>
     <string name="result_title">识别结果</string>
     <string name="gallery">相册</string>
     <string name="camera">相机</string>
@@ -28,4 +28,16 @@
     <string name="error_image_load_failed">图片加载失败</string>
     <string name="error_recognition_failed">识别失败</string>
     <string name="error_model_load_failed">模型加载失败</string>
+
+    <!-- 设置页面 -->
+    <string name="settings">设置</string>
+    <string name="model_selection">模型选择</string>
+    <string name="model_selection_desc">选择用于鱼类识别的 AI 模型</string>
+    <string name="model_custom_name">自定义训练模型</string>
+    <string name="model_custom_desc">针对特定鱼类优化的专用模型，识别精度更高</string>
+    <string name="model_yolov8_name">YOLOv8n 通用模型</string>
+    <string name="model_yolov8_desc">通用目标检测模型，支持更多种类</string>
+    <string name="model_switched">已切换到：%1$s</string>
+    <string name="about">关于</string>
+    <string name="app_version">版本 2.0.0 (Material Design 3)</string>
 </resources>

@@ -1,8 +1,8 @@
 # 鱼类识别 Android App - 项目文档
 
-> **版本**: 1.0.0  
-> **最后更新**: 2026-01-17  
-> **状态**: 代码完成，待模型文件
+> **版本**: 2.0.0  
+> **最后更新**: 2026-02-01  
+> **状态**: Material Design 3 UI 重构完成
 
 ---
 
@@ -22,7 +22,7 @@
 
 ## 项目概述
 
-本项目是一款基于 **TensorFlow Lite** 的移动端鱼类识别应用，采用 **粘土风格 (Claymorphism)** UI设计，支持通过相机拍照或从相册选择图片进行实时鱼类识别。
+本项目是一款基于 **TensorFlow Lite** 的移动端鱼类识别应用，采用 **Google Material Design 3 (Material You)** 设计风格，支持通过相机拍照或从相册选择图片进行实时鱼类识别。
 
 ### 主要特点
 
@@ -30,7 +30,7 @@
 |------|------|
 | 🎯 **智能识别** | 基于 YOLOv8 目标检测，支持 21 种常见鱼类 |
 | 📷 **双模式** | 支持相机拍照和相册选择两种识别方式 |
-| 🎨 **现代UI** | 采用粘土风格设计，柔和圆润的视觉体验 |
+| 🎨 **Material 3** | 采用 Google 官方最新设计语言 |
 | 🌏 **双语支持** | 中英文鱼类名称映射 |
 | ⚡ **快速响应** | 优化的模型推理，秒级识别速度 |
 
@@ -46,8 +46,8 @@
 ├─────────────────────────────────────────────────────┤
 │  展示层 (Presentation)                              │
 │  ├── MainActivity.kt          主活动              │
-│  ├── activity_main.xml        布局文件            │
-│  └── 粘土风格资源              UI组件              │
+│  ├── activity_main.xml        MD3 布局文件         │
+│  └── Material 3 资源          UI组件              │
 ├─────────────────────────────────────────────────────┤
 │  业务层 (Business)                                  │
 │  ├── FishClassifier.kt        图像分类            │
@@ -68,7 +68,7 @@
 | AndroidX Core | 1.12.0 | Android 核心库 |
 | CameraX | 1.3.1 | 相机功能 |
 | TensorFlow Lite | 2.14.0 | AI 模型推理 |
-| Material Components | 1.11.0 | UI 组件 |
+| Material Components | 1.11.0 | Material 3 UI 组件 |
 | Coroutines | 1.7.3 | 异步处理 |
 
 ### 系统要求
@@ -124,14 +124,14 @@ fish-recognition-app/
 │   ├── app/
 │   │   ├── src/main/
 │   │   │   ├── java/com/fishrecognition/
-│   │   │   │   ├── MainActivity.kt    # 主活动 (357行)
-│   │   │   │   ├── FishClassifier.kt  # 分类器 (176行)
+│   │   │   │   ├── MainActivity.kt    # 主活动
+│   │   │   │   ├── FishClassifier.kt  # 分类器
 │   │   │   │   ├── ImageUtils.kt      # 图像工具
 │   │   │   │   └── Application.kt     # 应用类
 │   │   │   ├── res/
-│   │   │   │   ├── layout/            # 布局文件
-│   │   │   │   ├── drawable/          # 粘土风格资源
-│   │   │   │   └── values/            # 颜色/尺寸/主题
+│   │   │   │   ├── layout/            # MD3 布局文件
+│   │   │   │   ├── drawable/          # Material 图标资源
+│   │   │   │   └── values/            # MD3 颜色/尺寸/主题
 │   │   │   └── assets/
 │   │   │       ├── fish_model.tflite  # ⚠️ 需下载
 │   │   │       └── labels.txt         # 鱼类标签
@@ -139,13 +139,12 @@ fish-recognition-app/
 │   ├── build.gradle                   # 项目构建配置
 │   └── settings.gradle
 ├── docs/
-│   └── models.md                      # 模型选择指南
+│   └── PROJECT_DOCUMENTATION.md       # 本文档
 ├── model/
 │   └── README.md                      # 模型说明
 ├── README.md                          # 项目说明
 ├── BUILD.md                           # 构建指南
-├── QUICKSTART.md                      # 快速开始
-└── PROJECT_STATUS.md                  # 项目状态
+└── QUICKSTART.md                      # 快速开始
 ```
 
 ---
@@ -155,13 +154,8 @@ fish-recognition-app/
 ### 1. 获取模型文件
 
 ```bash
-# 安装 ultralytics
 pip install ultralytics
-
-# 导出 YOLOv8-Nano 模型
 yolo export model=yolov8n.pt format=tflite
-
-# 复制到项目
 cp yolov8n.tflite android/app/src/main/assets/fish_model.tflite
 ```
 
@@ -175,11 +169,8 @@ cp yolov8n.tflite android/app/src/main/assets/fish_model.tflite
 ### 3. 运行应用
 
 ```bash
-# 命令行构建
 cd android
 ./gradlew assembleDebug
-
-# 安装到设备
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
@@ -189,33 +180,37 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 
 ## UI设计系统
 
-### 粘土风格 (Claymorphism)
+### Material Design 3 (Material You)
 
-本项目采用粘土风格设计，特点：
-- 柔和的圆角 (12-36dp)
-- 微妙的阴影深度
-- 鲜艳但不刺眼的配色
-- 可爱的视觉风格
+本项目采用 Google 官方最新设计语言:
+
+- **现代化布局**: CoordinatorLayout + BottomAppBar + FAB
+- **标准化组件**: MaterialCardView, MaterialButton, MaterialToolbar
+- **统一圆角**: 4dp - 28dp 分级圆角系统
+- **清晰层级**: 使用 Surface 和 Elevation 区分层级
 
 ### 配色方案
 
 | 颜色名称 | 色值 | 用途 |
 |----------|------|------|
-| `clay_primary` | `#FF9A8B` | 主色（粉橘色） |
-| `clay_secondary` | `#A0E7E5` | 辅助色（青蓝色） |
-| `clay_accent` | `#FFB4A2` | 强调色 |
-| `clay_background` | `#FDF6F3` | 背景色 |
-| `clay_surface` | `#FFF9F5` | 表面色 |
-| `clay_text` | `#4A4A4A` | 文字色 |
+| `md_primary` | `#1A73E8` | 主色 (Google Blue) |
+| `md_on_primary` | `#FFFFFF` | 主色上文字 |
+| `md_primary_container` | `#D2E3FC` | 主色容器 |
+| `md_secondary` | `#5F6368` | 辅助色 (灰色) |
+| `md_surface` | `#FFFFFF` | 表面色 |
+| `md_on_surface` | `#1F1F1F` | 表面上文字 |
+| `md_outline` | `#DADCE0` | 边框色 |
 
 ### 尺寸规范
 
 | 尺寸名称 | 数值 | 用途 |
 |----------|------|------|
-| `clay_radius_small` | 12dp | 小圆角 |
-| `clay_radius_medium` | 20dp | 中圆角 |
-| `clay_radius_large` | 28dp | 大圆角 |
-| `clay_elevation_medium` | 8dp | 阴影高度 |
+| `md_corner_small` | 8dp | 小圆角 |
+| `md_corner_medium` | 12dp | 中圆角 |
+| `md_corner_large` | 16dp | 大圆角 |
+| `md_corner_extra_large` | 28dp | 超大圆角 |
+| `md_spacing_medium` | 16dp | 标准间距 |
+| `md_spacing_large` | 24dp | 大间距 |
 
 ---
 
@@ -233,10 +228,7 @@ class FishClassifier(private val context: Context) {
         private const val INPUT_SIZE = 640
     }
 
-    // 初始化检测器
     fun setup(): Boolean { ... }
-
-    // 检测图片中的鱼类
     fun detectFish(bitmap: Bitmap): List<FishDetection> { ... }
 }
 ```
@@ -249,8 +241,8 @@ data class FishDetection(
     val confidence: Float,      // 置信度
     val boundingBox: RectF      // 边界框
 ) {
-    fun getChineseName(): String { ... }     // 获取中文名
-    fun getConfidencePercent(): String { ... } // 置信度百分比
+    fun getChineseName(): String { ... }
+    fun getConfidencePercent(): String { ... }
 }
 ```
 
@@ -292,10 +284,7 @@ keytool -genkey -v -keystore fish-release.keystore \
 ### 自定义训练模型
 
 ```bash
-# 准备数据集后训练
 yolo detect train data=fish_data.yaml model=yolov8n.pt epochs=100
-
-# 导出模型
 yolo export model=runs/detect/train/weights/best.pt format=tflite
 ```
 

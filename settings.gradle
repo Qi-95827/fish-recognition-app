@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "FishRecognition"
 include ':app'
+project(':app').projectDir = new File(rootDir, 'android/app')

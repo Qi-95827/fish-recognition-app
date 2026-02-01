@@ -6,8 +6,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -21,6 +19,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.fishrecognition.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.*
 
 /**
@@ -29,10 +28,44 @@ import kotlinx.coroutines.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var modelPreferences: ModelPreferences
     private var cameraProvider: ProcessCameraProvider? = null
     private var imageCapture: ImageCapture? = null
-    private var fishClassifier: FishClassifier? = null
+    private var fishClassifier: IFishClassifier? = null
+    private var currentModelPath: String = ""
     private val mainScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    // 设置页面返回结果
+    private val settingsLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { _ ->
+        // 始终检查模型是否已更改，无论返回方式如何
+        reloadClassifierIfNeeded()
+    }
+
+    // 鱼类 emoji 映射
+    private val fishEmojis = mapOf(
+        "Goldfish" to "🐟",
+        "Carp" to "🐟",
+        "Salmon" to "🐟",
+        "Trout" to "🐟",
+        "Bass" to "🐟",
+        "Tuna" to "🐟",
+        "Cod" to "🐟",
+        "Catfish" to "🐟",
+        "Pike" to "🐟",
+        "Perch" to "🐟",
+        "Tilapia" to "🐟",
+        "Mackerel" to "🐟",
+        "Snapper" to "🐠",
+        "Grouper" to "🐠",
+        "Sardine" to "🐟",
+        "Swordfish" to "🐟",
+        "Halibut" to "🐟",
+        "Flounder" to "🐟",
+        "Anchovy" to "🐟",
+        "Herring" to "🐟"
+    )
 
     // 相机权限请求
     private val requestCameraPermissionLauncher = registerForActivityResult(
@@ -61,6 +94,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        modelPreferences = ModelPreferences(this)
         setupViews()
         setupClassifier()
         checkCameraPermission()
@@ -70,45 +104,67 @@ class MainActivity : AppCompatActivity() {
      * 初始化视图
      */
     private fun setupViews() {
-        // 拍照按钮 - 点击时播放弹跳动画
+        // 拍照按钮
         binding.captureButton.setOnClickListener {
-            playButtonBounceAnimation(it)
             captureImage()
         }
 
-        // 相册按钮 - 点击时播放弹跳动画
+        // 相册按钮
         binding.galleryButton.setOnClickListener {
-            playButtonBounceAnimation(it)
             openGallery()
         }
 
-        // 再试一次按钮 - 隐藏结果卡片时播放滑出动画
+        // 再试一次按钮
         binding.tryAgainButton.setOnClickListener {
-            hideResultCardWithAnimation()
+            hideResultCard()
+        }
+
+        // 工具栏菜单点击
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_settings -> {
+                    openSettings()
+                    true
+                }
+                else -> false
+            }
         }
     }
 
     /**
-     * 播放按钮弹跳动画
+     * 打开设置页面
      */
-    private fun playButtonBounceAnimation(view: View) {
-        val bounceAnim = AnimationUtils.loadAnimation(this, R.anim.button_bounce)
-        view.startAnimation(bounceAnim)
+    private fun openSettings() {
+        val intent = Intent(this, SettingsActivity::class.java)
+        settingsLauncher.launch(intent)
     }
 
     /**
-     * 隐藏结果卡片（带滑出动画）
+     * 如果模型已更改则重新加载
      */
-    private fun hideResultCardWithAnimation() {
-        val slideDown = AnimationUtils.loadAnimation(this, R.anim.slide_down)
-        slideDown.setAnimationListener(object : android.view.animation.Animation.AnimationListener {
-            override fun onAnimationStart(animation: android.view.animation.Animation?) {}
-            override fun onAnimationRepeat(animation: android.view.animation.Animation?) {}
-            override fun onAnimationEnd(animation: android.view.animation.Animation?) {
-                binding.resultCard.visibility = View.GONE
-            }
-        })
-        binding.resultCard.startAnimation(slideDown)
+    private fun reloadClassifierIfNeeded() {
+        val newModelPath = modelPreferences.getSelectedModel()
+        if (newModelPath != currentModelPath) {
+            android.util.Log.d("MainActivity", "模型已切换: $currentModelPath -> $newModelPath")
+            fishClassifier?.close()
+            fishClassifier = null
+            
+            // 获取模型显示名称
+            val modelInfo = ModelPreferences.AVAILABLE_MODELS.find { it.fileName == newModelPath }
+            val displayName = modelInfo?.displayName ?: newModelPath
+            
+            // 先显示切换中提示
+            Toast.makeText(this, "正在加载: $displayName", Toast.LENGTH_SHORT).show()
+            
+            setupClassifier()
+        }
+    }
+
+    /**
+     * 隐藏结果卡片
+     */
+    private fun hideResultCard() {
+        binding.resultCard.visibility = View.GONE
     }
 
     /**
@@ -116,36 +172,59 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setupClassifier() {
         try {
-            fishClassifier = FishClassifier(this)
+            currentModelPath = modelPreferences.getSelectedModel()
+            android.util.Log.d("MainActivity", "正在加载模型: $currentModelPath")
+            
+            // 根据模型类型选择合适的分类器
+            fishClassifier = createClassifier(currentModelPath)
             val success = fishClassifier?.setup() ?: false
 
             if (!success) {
-                showModelMissingDialog()
+                // 模型加载失败，可能是格式不兼容
+                showModelLoadErrorDialog(currentModelPath)
+            } else {
+                android.util.Log.d("MainActivity", "模型加载成功: $currentModelPath")
             }
         } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "模型初始化异常", e)
             Toast.makeText(this, "模型初始化失败: ${e.message}", Toast.LENGTH_SHORT).show()
-            showModelMissingDialog()
+            showModelLoadErrorDialog(currentModelPath)
         }
     }
 
     /**
-     * 显示模型缺失对话框
+     * 根据模型类型创建对应的分类器
+     * 注意：当前所有模型都是 YOLOv8 格式，使用 Interpreter API
      */
-    private fun showModelMissingDialog() {
+    private fun createClassifier(modelPath: String): IFishClassifier {
+        // 所有模型都使用 YOLOv8 分类器（Interpreter API）
+        // best_float32.tflite 和 yolov8n_float32.tflite 都是 YOLOv8 格式
+        android.util.Log.d("MainActivity", "使用 YOLOv8 分类器加载: $modelPath")
+        return Yolov8Classifier(this, modelPath)
+    }
+
+    /**
+     * 显示模型加载失败对话框
+     */
+    private fun showModelLoadErrorDialog(modelPath: String) {
+        val modelInfo = ModelPreferences.AVAILABLE_MODELS.find { it.fileName == modelPath }
+        val displayName = modelInfo?.displayName ?: modelPath
+        
         AlertDialog.Builder(this)
-            .setTitle("模型文件缺失")
+            .setTitle("模型加载失败")
             .setMessage(
-                "检测不到 fish_model.tflite 模型文件。\n\n" +
-                "请按以下步骤手动下载模型：\n\n" +
-                "1. 访问 https://github.com/ultralytics/assets/releases\n" +
-                "2. 下载 'YOLOv8n Float32 TFLite' 文件\n" +
-                "3. 将文件重命名为 'fish_model.tflite'\n" +
-                "4. 复制到 android/app/src/main/assets/ 目录"
+                "无法加载模型: $displayName\n\n" +
+                "可能的原因:\n" +
+                "• 模型文件格式不兼容\n" +
+                "• 模型文件已损坏\n\n" +
+                "建议切换回默认模型后重试。"
             )
-            .setPositiveButton("我知道了") { _, _ -> }
-            .setNegativeButton("查看文档") { _, _ ->
-                // 可以添加跳转到文档页面的逻辑
+            .setPositiveButton("切换到默认模型") { _, _ ->
+                // 切换回默认模型
+                modelPreferences.setSelectedModel(ModelPreferences.DEFAULT_MODEL)
+                setupClassifier()
             }
+            .setNegativeButton("取消", null)
             .show()
     }
 
@@ -223,7 +302,7 @@ class MainActivity : AppCompatActivity() {
                         ).show()
                     }
 
-                    override fun onImageSaved(output: ImageCapture.OutputFileOptions.OutputFileResults) {
+                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                         val filePath = output.savedUri?.path ?: return
                         recognizeFish(filePath)
                     }
@@ -312,38 +391,37 @@ class MainActivity : AppCompatActivity() {
      * 显示识别结果
      */
     private fun showResult(detection: FishDetection) {
-        // 显示结果卡片并播放滑入动画
+        // 显示结果卡片
         binding.resultCard.visibility = View.VISIBLE
-        val slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up)
-        binding.resultCard.startAnimation(slideUp)
 
-        binding.resultTitle.text = getString(R.string.result_title)
+        // 设置鱼类图标
+        val fishEmoji = fishEmojis[detection.className] ?: "🐟"
+        binding.fishIcon.text = fishEmoji
+
+        // 设置文本信息
         binding.fishNameText.text = detection.getChineseName()
         binding.fishNameEngText.text = detection.className
-        binding.confidenceText.text = "${getString(R.string.confidence)}: ${detection.getConfidencePercent()}"
 
-        // 根据置信度显示不同的背景色
-        val bgColor = when {
-            detection.confidence >= 0.8f -> getColor(R.color.clay_success)
-            detection.confidence >= 0.6f -> getColor(R.color.clay_warning)
-            else -> getColor(R.color.clay_error)
-        }
-        binding.confidenceText.setTextColor(bgColor)
+        // 置信度百分比
+        val confidencePercent = (detection.confidence * 100).toInt()
+        binding.confidencePercentText.text = "$confidencePercent%"
+
+        // 更新置信度进度条
+        binding.confidenceProgress?.progress = confidencePercent
     }
 
     /**
      * 显示未检测到鱼类
      */
     private fun showNoFishDetected() {
-        // 显示未检测到结果卡片并播放滑入动画
+        // 显示结果卡片
         binding.resultCard.visibility = View.VISIBLE
-        val slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up)
-        binding.resultCard.startAnimation(slideUp)
 
-        binding.resultTitle.text = getString(R.string.no_fish_detected)
-        binding.fishNameText.text = "—"
+        binding.fishIcon.text = "❓"
+        binding.fishNameText.text = "未识别"
         binding.fishNameEngText.text = ""
-        binding.confidenceText.text = ""
+        binding.confidencePercentText.text = "0%"
+        binding.confidenceProgress?.progress = 0
     }
 
     /**
@@ -351,7 +429,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showLoading() {
         binding.resultCard.visibility = View.GONE
-        binding.loadingProgressBar.visibility = View.VISIBLE
+        binding.loadingContainer.visibility = View.VISIBLE
         binding.captureButton.isEnabled = false
         binding.galleryButton.isEnabled = false
     }
@@ -360,7 +438,7 @@ class MainActivity : AppCompatActivity() {
      * 隐藏加载中状态
      */
     private fun hideLoading() {
-        binding.loadingProgressBar.visibility = View.GONE
+        binding.loadingContainer.visibility = View.GONE
         binding.captureButton.isEnabled = true
         binding.galleryButton.isEnabled = true
     }

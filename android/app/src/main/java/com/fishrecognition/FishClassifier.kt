@@ -17,12 +17,16 @@ import java.io.InputStreamReader
 
 /**
  * 鱼类识别器 - 使用TensorFlow Lite Task API
+ * 支持动态切换模型（Task API 兼容模型）
  */
-class FishClassifier(private val context: Context) {
+class FishClassifier(
+    private val context: Context,
+    private val modelPath: String = DEFAULT_MODEL_PATH
+) : IFishClassifier {
 
     companion object {
         private const val TAG = "FishClassifier"
-        private const val MODEL_PATH = "best_float32.tflite"
+        private const val DEFAULT_MODEL_PATH = "best_float32.tflite"
         private const val LABELS_PATH = "labels.txt"
         private const val MAX_RESULTS = 5
         private const val CONFIDENCE_THRESHOLD = 0.5f
@@ -62,9 +66,9 @@ class FishClassifier(private val context: Context) {
     /**
      * 初始化检测器
      */
-    var isSetupComplete = false
+    override var isSetupComplete = false
 
-    fun setup(): Boolean {
+    override fun setup(): Boolean {
         return try {
             val options = ObjectDetector.ObjectDetectorOptions.builder()
                 .setBaseOptions(BaseOptions.builder().setNumThreads(4).build())
@@ -72,8 +76,8 @@ class FishClassifier(private val context: Context) {
                 .setMaxResults(MAX_RESULTS)
                 .build()
 
-            val modelFile = FileUtil.loadMappedFile(context, MODEL_PATH)
-            objectDetector = ObjectDetector.createFromFileAndOptions(modelFile, options)
+            val modelBuffer = FileUtil.loadMappedFile(context, modelPath)
+            objectDetector = ObjectDetector.createFromBufferAndOptions(modelBuffer, options)
 
             Log.d(TAG, "Object detector initialized successfully")
             isSetupComplete = true
@@ -88,7 +92,7 @@ class FishClassifier(private val context: Context) {
     /**
      * 检测图片中的鱼类
      */
-    fun detectFish(bitmap: Bitmap): List<FishDetection> {
+    override fun detectFish(bitmap: Bitmap): List<FishDetection> {
         objectDetector ?: return emptyList()
 
         return try {
@@ -124,7 +128,7 @@ class FishClassifier(private val context: Context) {
     /**
      * 释放资源
      */
-    fun close() {
+    override fun close() {
         objectDetector?.close()
         objectDetector = null
     }

@@ -1,21 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 粘土风格尺寸 -->
-    <dimen name="clay_radius_small">12dp</dimen>
-    <dimen name="clay_radius_medium">20dp</dimen>
-    <dimen name="clay_radius_large">28dp</dimen>
-    <dimen name="clay_radius_xlarge">36dp</dimen>
+    <!-- Material Design 3 尺寸系统 -->
 
-    <dimen name="clay_padding_small">12dp</dimen>
-    <dimen name="clay_padding_medium">20dp</dimen>
-    <dimen name="clay_padding_large">28dp</dimen>
+    <!-- Shape System - 圆角 -->
+    <dimen name="md_corner_none">0dp</dimen>
+    <dimen name="md_corner_extra_small">4dp</dimen>
+    <dimen name="md_corner_small">8dp</dimen>
+    <dimen name="md_corner_medium">12dp</dimen>
+    <dimen name="md_corner_large">16dp</dimen>
+    <dimen name="md_corner_extra_large">28dp</dimen>
+    <dimen name="md_corner_full">50dp</dimen>
 
-    <dimen name="clay_elevation_small">4dp</dimen>
-    <dimen name="clay_elevation_medium">8dp</dimen>
-    <dimen name="clay_elevation_large">12dp</dimen>
+    <!-- Spacing System - 间距 -->
+    <dimen name="md_spacing_none">0dp</dimen>
+    <dimen name="md_spacing_extra_small">4dp</dimen>
+    <dimen name="md_spacing_small">8dp</dimen>
+    <dimen name="md_spacing_medium">16dp</dimen>
+    <dimen name="md_spacing_large">24dp</dimen>
+    <dimen name="md_spacing_extra_large">32dp</dimen>
+    <dimen name="md_spacing_xxl">48dp</dimen>
 
-    <dimen name="clay_text_size_small">14sp</dimen>
-    <dimen name="clay_text_size_medium">16sp</dimen>
-    <dimen name="clay_text_size_large">20sp</dimen>
-    <dimen name="clay_text_size_xlarge">28sp</dimen>
+    <!-- Elevation System - Material 3 使用较低的阴影 -->
+    <dimen name="md_elevation_level0">0dp</dimen>
+    <dimen name="md_elevation_level1">1dp</dimen>
+    <dimen name="md_elevation_level2">3dp</dimen>
+    <dimen name="md_elevation_level3">6dp</dimen>
+    <dimen name="md_elevation_level4">8dp</dimen>
+    <dimen name="md_elevation_level5">12dp</dimen>
+
+    <!-- Component Sizes - 组件尺寸 -->
+    <dimen name="md_toolbar_height">64dp</dimen>
+    <dimen name="md_bottom_bar_height">80dp</dimen>
+    <dimen name="md_fab_size">56dp</dimen>
+    <dimen name="md_fab_size_large">96dp</dimen>
+    <dimen name="md_fab_mini_size">40dp</dimen>
+    <dimen name="md_icon_size">24dp</dimen>
+    <dimen name="md_icon_size_small">18dp</dimen>
+    <dimen name="md_icon_size_large">32dp</dimen>
+    <dimen name="md_button_height">40dp</dimen>
+    <dimen name="md_button_height_large">56dp</dimen>
+
+    <!-- Card Sizes - 卡片尺寸 -->
+    <dimen name="md_card_corner">12dp</dimen>
+    <dimen name="md_card_padding">16dp</dimen>
+    <dimen name="md_card_elevation">1dp</dimen>
+
+    <!-- Text Sizes - 遵循 Material 3 排版系统 -->
+    <dimen name="md_text_display_large">57sp</dimen>
+    <dimen name="md_text_display_medium">45sp</dimen>
+    <dimen name="md_text_display_small">36sp</dimen>
+    <dimen name="md_text_headline_large">32sp</dimen>
+    <dimen name="md_text_headline_medium">28sp</dimen>
+    <dimen name="md_text_headline_small">24sp</dimen>
+    <dimen name="md_text_title_large">22sp</dimen>
+    <dimen name="md_text_title_medium">16sp</dimen>
+    <dimen name="md_text_title_small">14sp</dimen>
+    <dimen name="md_text_body_large">16sp</dimen>
+    <dimen name="md_text_body_medium">14sp</dimen>
+    <dimen name="md_text_body_small">12sp</dimen>
+    <dimen name="md_text_label_large">14sp</dimen>
+    <dimen name="md_text_label_medium">12sp</dimen>
+    <dimen name="md_text_label_small">11sp</dimen>
 </resources>
